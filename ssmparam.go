@@ -49,5 +49,5 @@ func New(client *ssm.Client) *Store {
 }
 
 type Store struct {
-	client *ssm.SSM
+	client *ssm.Client
 }
