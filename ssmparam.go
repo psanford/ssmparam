@@ -1,13 +1,14 @@
 package ssmparam
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
 	"path"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
 )
 
 func (kv *Store) MustGet(key string) string {
@@ -30,7 +31,7 @@ func (kv *Store) Get(key string) (string, error) {
 		WithDecryption: aws.Bool(true),
 	}
 
-	resp, err := kv.client.GetParameter(&req)
+	resp, err := kv.client.GetParameter(context.Background(), &req)
 	if err != nil {
 		return "", fmt.Errorf("read key %s err: %w", key, err)
 	}
@@ -41,7 +42,7 @@ func (kv *Store) Get(key string) (string, error) {
 	return *val, nil
 }
 
-func New(client *ssm.SSM) *Store {
+func New(client *ssm.Client) *Store {
 	return &Store{
 		client: client,
 	}
